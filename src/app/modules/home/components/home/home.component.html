@@ -1,0 +1,314 @@
+<nav class="site-header sticky-top py-1">
+  <div class="container d-flex flex-column flex-md-row justify-content-between align-items-center">
+    <a class="py-2">
+      Easy Cart
+      <img src="../assets/images/logo.png" class="img-fluid sc-logo" alt="logo">
+    </a>
+    <a class="py-2 d-md-inline-block cursor-pointer"
+       (click)="openCartModal(content)">
+      Cart
+      <span class="badge badge-secondary">{{ cartItems.length }}</span>
+    </a>
+  </div>
+</nav>
+
+<div class="container my-3">
+  <form>
+    <div class="form-group form-inline">
+      Search by name: <label>
+      <input class="form-control ml-2"
+             type="text"
+             [formControl]="filter"/>
+    </label>
+    </div>
+  </form>
+  <table class="table table-striped">
+    <thead>
+    <tr>
+      <th scope="col">#</th>
+      <th scope="col">Product Name</th>
+      <th scope="col" class="cursor-pointer" (click)="onSort()">{{ sortOrder | sortArrow }}  Price</th>
+      <th scope="col">Quantity</th>
+      <th scope="col">Action</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr *ngFor="let product of (products$ | async); index as i">
+      <th scope="row">{{ i + 1 }}</th>
+      <td>
+        <ngb-highlight [result]="product.productName" [term]="filter.value"></ngb-highlight>
+      </td>
+      <td>
+        {{ product.price | currency:'EUR':'symbol' }}
+      </td>
+      <td>
+        {{ product.quantity | number }}
+      </td>
+      <td (click)="addToCart(product)">
+        <button type="button"
+                [disabled]="!product.quantity"
+                class="btn badge btn-secondary">Add to cart
+        </button>
+      </td>
+    </tr>
+    <tr *ngIf="true">
+      <td colspan="5">
+        Init data loading
+        <div class="ml-2 spinner-border spinner-border-sm" role="status">
+          <span class="sr-only">Loading...</span>
+        </div>
+      </td>
+    </tr>
+    </tbody>
+  </table>
+</div>
+
+<footer class="container py-5">
+  <div class="row">
+    <div class="col-12 col-md">
+      <small class="d-block mb-3 text-muted">&copy; 2020 Vuk Samardžić</small>
+    </div>
+  </div>
+</footer>
+
+<ng-template #content let-modal>
+  <div class="modal-header align-items-center">
+    <h5 class="modal-title">Cart modal</h5>
+    <span class="h3 cursor-pointer" (click)="modal.dismiss()">&times;</span>
+  </div>
+  <div class="modal-body">
+    <div class="btn-group btn-group-toggle w-100 mb-3">
+      <label class="btn btn-primary"
+             *ngFor="let step of formSteps"
+             (change)="onFormStepChange()"
+             [ngClass]="{'active': currentFormStep === step.value, 'sc-disabled': disableFormStep(step.value)}">
+        <input type="radio"
+               [disabled]="disableFormStep(step.value)"
+               name="currentFormStep"
+               [(ngModel)]="currentFormStep"
+               [value]="step.value">{{ step.text }}
+        <span class="badge badge-success badge-pill"
+              *ngIf="step.value | showStepOK:form:cartItems:form.value">{{ '✓' }}</span>
+        <span class="badge badge-danger badge-pill"
+              *ngIf="!(step.value | showStepOK:form:cartItems:form.value)">{{ '✗' }}</span>
+      </label>
+    </div>
+    <form autocomplete="off"
+          (ngSubmit)="onFormSubmit()"
+          [formGroup]="form">
+      <ng-container [ngSwitch]="currentFormStep">
+        <div *ngSwitchCase="1">
+          <div class="form-group">
+            <ul class="list-group list-group-flush">
+              <li class="list-group-item d-flex justify-content-between align-items-center"
+                  *ngFor="let cartItem of cartItems">
+                {{ cartItem.productName }}
+                <div>
+                  <button type="button" class="btn badge btn-light mx-1"
+                          (click)="onQuantityClick(cartItem, 'subtract')">
+                    ←
+                  </button>
+                  <span class="badge badge-primary badge-pill">{{ cartItem.quantity }}</span>
+                  <button type="button" class="btn badge btn-light mx-1" (click)="onQuantityClick(cartItem, 'add')">
+                    →
+                  </button>
+                  <button type="button" class="btn badge btn-danger ml-2 mr-1"
+                          (click)="onQuantityClick(cartItem, 'remove')">Delete ✗
+                  </button>
+                </div>
+              </li>
+              <li class="list-group-item d-flex justify-content-between align-items-center">
+                <span class="h6">Total: </span> {{ cartTotalPrice | currency:'EUR':'symbol' }}
+              </li>
+            </ul>
+          </div>
+          <div class="d-flex align-items-center justify-content-end">
+            <button type="button"
+                    [disabled]="!cartItems.length"
+                    (click)="goToStep('next')"
+                    class="btn btn-primary">Go to shipping
+            </button>
+          </div>
+        </div>
+        <div *ngSwitchCase="2">
+          <div class="form-group">
+            <label for="firstNameId">First Name *</label>
+            <input type="text"
+                   id="firstNameId"
+                   class="form-control"
+                   placeholder="John"
+                   formControlName="firstName">
+            <div *ngIf="firstName.touched && firstName.errors">
+              <div class="invalid-message" *ngIf="firstName.errors.pattern">
+                Only english alphabet.
+              </div>
+              <div class="invalid-message" *ngIf="firstName.errors.required">
+                First name is required.
+              </div>
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="lastNameId">Last Name *</label>
+            <input type="text"
+                   id="lastNameId"
+                   class="form-control"
+                   placeholder="Smith"
+                   formControlName="lastName">
+            <div *ngIf="lastName.touched && lastName.errors">
+              <div class="invalid-message" *ngIf="lastName.errors.pattern">
+                Only english alphabet.
+              </div>
+              <div class="invalid-message" *ngIf="lastName.errors.required">
+                Last name is required.
+              </div>
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="addressId">Address</label>
+            <input type="text"
+                   id="addressId"
+                   class="form-control"
+                   placeholder="Street bb, City"
+                   formControlName="address">
+          </div>
+          <div class="form-group">
+            <label for="phoneId">Phone *</label>
+            <input type="text"
+                   id="phoneId"
+                   class="form-control"
+                   placeholder="+38267000000"
+                   formControlName="phone">
+            <div *ngIf="phone.touched && phone.errors">
+              <div class="invalid-message" *ngIf="phone.errors.pattern">
+                Required format ex: +38812981378
+              </div>
+              <div class="invalid-message" *ngIf="phone.errors.required">
+                Phone is required.
+              </div>
+            </div>
+          </div>
+          <div class="d-flex align-items-center justify-content-between">
+            <button type="button"
+                    (click)="goToStep('prev')"
+                    class="btn btn-light">Previous
+            </button>
+            <button type="button"
+                    [disabled]="firstName.invalid || lastName.invalid || phone.invalid"
+                    (click)="goToStep('next')"
+                    class="btn btn-primary">Go to payment
+            </button>
+          </div>
+        </div>
+        <div *ngSwitchCase="3">
+          <div class="form-group">
+            <label for="accountOwnerId">Account Owner *</label>
+            <input type="text"
+                   id="accountOwnerId"
+                   class="form-control"
+                   placeholder="JohnJohnson"
+                   formControlName="accountOwner">
+            <div *ngIf="accountOwner.touched && accountOwner.errors">
+              <div class="invalid-message" *ngIf="accountOwner.errors.pattern">
+                Only english alphabet.
+              </div>
+              <div class="invalid-message" *ngIf="accountOwner.errors.required">
+                Account Owner is required.
+              </div>
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="ibanId">IBAN *</label>
+            <input type="text"
+                   id="ibanId"
+                   class="form-control"
+                   placeholder="ex: AL90208110080000001039531801"
+                   formControlName="iban">
+            <div *ngIf="iban.touched && iban.errors">
+              <div class="invalid-message" *ngIf="iban.errors.iban">
+                IBAN is not correct.
+              </div>
+              <div class="invalid-message" *ngIf="iban.errors.required">
+                IBAN is required.
+              </div>
+            </div>
+          </div>
+          <div class="d-flex align-items-center justify-content-between">
+            <button type="button"
+                    (click)="goToStep('prev')"
+                    class="btn btn-light">Previous
+            </button>
+            <button type="button"
+                    [disabled]="accountOwner.invalid || iban.invalid"
+                    (click)="goToStep('next')"
+                    class="btn btn-primary">Go to overview
+            </button>
+          </div>
+        </div>
+        <div *ngSwitchCase="4">
+          <div class="form-group">
+            <ul class="list-group list-group-flush">
+              <li *ngIf="firstName.value"
+                  class="list-group-item d-flex justify-content-between align-items-center">
+                <span class="h6">First name: </span>{{ firstName.value }}
+              </li>
+              <li *ngIf="lastName.value"
+                  class="list-group-item d-flex justify-content-between align-items-center">
+                <span class="h6">Last Name: </span>{{ lastName.value }}
+              </li>
+              <li *ngIf="address.value"
+                  class="list-group-item d-flex justify-content-between align-items-center">
+                <span class="h6">Address: </span> {{ address.value }}
+              </li>
+              <li *ngIf="phone.value"
+                  class="list-group-item d-flex justify-content-between align-items-center">
+                <span class="h6">Phone: </span>{{ phone.value }}
+              </li>
+              <li *ngIf="accountOwner.value"
+                  class="list-group-item d-flex justify-content-between align-items-center">
+                <span class="h6">Account Owner: </span>{{ accountOwner.value }}
+              </li>
+              <li *ngIf="iban.value"
+                  class="list-group-item d-flex justify-content-between align-items-center">
+                <span class="h6">IBAN: </span>{{ iban.value | iban }}
+              </li>
+            </ul>
+            <h6 class="m-3" *ngIf="cartItems.length">Items:</h6>
+            <ul class="list-group list-group-flush">
+              <li class="list-group-item d-flex justify-content-between align-items-center"
+                  *ngFor="let cartItem of cartItems">
+                {{ cartItem.productName }}
+                <div>
+                  <button type="button" class="btn badge btn-light mx-1"
+                          (click)="onQuantityClick(cartItem, 'subtract')">
+                    ←
+                  </button>
+                  <span class="badge badge-primary badge-pill">{{ cartItem.quantity }}</span>
+                  <button type="button" class="btn badge btn-light mx-1" (click)="onQuantityClick(cartItem, 'add')">
+                    →
+                  </button>
+                  <button type="button" class="btn badge btn-danger ml-2 mr-1"
+                          (click)="onQuantityClick(cartItem, 'remove')">Delete ✗
+                  </button>
+                </div>
+              </li>
+              <li class="list-group-item d-flex justify-content-between align-items-center">
+                <span class="h6">Total: </span> {{ cartTotalPrice | currency:'EUR':'symbol' }}
+              </li>
+            </ul>
+          </div>
+          <div class="d-flex align-items-center justify-content-between">
+            <button type="button"
+                    (click)="goToStep('prev')"
+                    class="btn btn-light">Previous
+            </button>
+            <button type="submit"
+                    [disabled]="form.invalid || !cartItems.length"
+                    (click)="goToStep('confirm')"
+                    class="btn btn-success">Confirm
+            </button>
+          </div>
+        </div>
+      </ng-container>
+    </form>
+  </div>
+</ng-template>

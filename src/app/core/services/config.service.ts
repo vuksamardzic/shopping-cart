@@ -6,4 +6,8 @@ export class ConfigService {
 
   constructor() {
   }
+
+  static getProductUrl(): string {
+    return `${this.URL}/product`;
+  }
 }
