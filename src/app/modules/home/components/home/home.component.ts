@@ -96,7 +96,7 @@ export class HomeComponent implements OnInit {
           this.loader = false;
           this.products$ = this.filter.valueChanges.pipe(
             startWith(''),
-            map(query => this.productService.searchByProductName(query, this.products))
+            map(() => this.productService.searchByProductName(this.filter.value, this.products))
           );
         }, error => {
           this.loader = false;

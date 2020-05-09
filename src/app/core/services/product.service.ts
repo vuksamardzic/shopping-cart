@@ -23,12 +23,12 @@ export class ProductService {
       const term = text.toLowerCase();
       return product.productName.toLowerCase().includes(term);
     });
-    console.log('[ search :: ]', filteredProducts);
+    // console.log('[ search :: ]', filteredProducts);
     return filteredProducts;
   }
 
   sortProductsByPrice(sortOrder: string, products: Product[]): Product[] {
-    console.log('[ sort :: ]', products);
+    // console.log('[ sort :: ]', products);
     if (sortOrder === SortOrderEnum.DESC) {
       return products.sort((a, b) => b.price - a.price);
     } else if (sortOrder === SortOrderEnum.ASC) {
