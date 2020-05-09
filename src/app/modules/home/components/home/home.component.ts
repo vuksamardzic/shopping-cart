@@ -1,16 +1,16 @@
 import {Component, OnInit} from '@angular/core';
-import {FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
-import {ProductService} from "../../../../core/services/product.service";
-import {Observable} from "rxjs";
-import {map, startWith} from "rxjs/operators";
-import {Product} from "../../../../core/interfaces/product.interface";
-import {SortOrderEnum} from "../../../../core/enums/sort-order.enum";
-import {NgbModal} from "@ng-bootstrap/ng-bootstrap";
-import {DataService} from "../../../../core/services/data.service";
-import {CartItemModel} from "../../../../core/model/cart-item.model";
-import {IBANValidator} from "../../../../core/validators/iban.validator";
-import {Router} from "@angular/router";
-import {LocalStorageService} from "../../../../core/services/local-storage.service";
+import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
+import {ProductService} from '../../../../core/services/product.service';
+import {Observable} from 'rxjs';
+import {map, startWith} from 'rxjs/operators';
+import {Product} from '../../../../core/interfaces/product.interface';
+import {SortOrderEnum} from '../../../../core/enums/sort-order.enum';
+import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
+import {DataService} from '../../../../core/services/data.service';
+import {CartItemModel} from '../../../../core/model/cart-item.model';
+import {IBANValidator} from '../../../../core/validators/iban.validator';
+import {Router} from '@angular/router';
+import {LocalStorageService} from '../../../../core/services/local-storage.service';
 
 @Component({
   selector: 'sc-dashboard',
@@ -44,6 +44,30 @@ export class HomeComponent implements OnInit {
   ) {
   }
 
+  get firstName() {
+    return this.form.get('firstName');
+  }
+
+  get lastName() {
+    return this.form.get('lastName');
+  }
+
+  get address() {
+    return this.form.get('address');
+  }
+
+  get phone() {
+    return this.form.get('phone');
+  }
+
+  get accountOwner() {
+    return this.form.get('accountOwner');
+  }
+
+  get iban() {
+    return this.form.get('iban');
+  }
+
   ngOnInit(): void {
     this.form = this.fb.group({
       firstName: ['', [Validators.required, Validators.pattern(/^[a-zA-Z]+$/)]],
@@ -54,7 +78,7 @@ export class HomeComponent implements OnInit {
       iban: ['', [Validators.required, IBANValidator()]]
     });
     this.form.valueChanges.subscribe(() => {
-      this.localStorageService.saveToLocalStorage(this.getAllFormData())
+      this.localStorageService.saveToLocalStorage(this.getAllFormData());
     });
     const formData = this.localStorageService.getLocalStorage();
     if (formData) {
@@ -123,7 +147,7 @@ export class HomeComponent implements OnInit {
         this.cartTotalPrice += (cartItem.price * cartItem.quantity);
       });
     }
-    this.localStorageService.saveToLocalStorage(this.getAllFormData())
+    this.localStorageService.saveToLocalStorage(this.getAllFormData());
   }
 
   onFormSubmit(): void {
@@ -159,7 +183,7 @@ export class HomeComponent implements OnInit {
         console.log('CONFIRM');
         break;
     }
-    this.localStorageService.saveToLocalStorage(this.getAllFormData())
+    this.localStorageService.saveToLocalStorage(this.getAllFormData());
   }
 
   disableFormStep(currentStep: number): boolean {
@@ -169,38 +193,22 @@ export class HomeComponent implements OnInit {
       case 2:
         return !this.cartItems.length;
       case 3:
-        return !this.cartItems.length || this.firstName.invalid || this.lastName.invalid || this.phone.invalid;
+        return !this.cartItems.length ||
+          this.firstName.invalid ||
+          this.lastName.invalid ||
+          this.phone.invalid;
       case 4:
-        return !this.cartItems.length || this.firstName.invalid || this.lastName.invalid || this.phone.invalid || this.accountOwner.invalid || this.iban.invalid;
+        return !this.cartItems.length ||
+          this.firstName.invalid ||
+          this.lastName.invalid ||
+          this.phone.invalid ||
+          this.accountOwner.invalid ||
+          this.iban.invalid;
     }
     return false;
   }
 
   onFormStepChange(): void {
-    this.localStorageService.saveToLocalStorage(this.getAllFormData())
-  }
-
-  get firstName() {
-    return this.form.get('firstName');
-  }
-
-  get lastName() {
-    return this.form.get('lastName');
-  }
-
-  get address() {
-    return this.form.get('address');
-  }
-
-  get phone() {
-    return this.form.get('phone');
-  }
-
-  get accountOwner() {
-    return this.form.get('accountOwner');
-  }
-
-  get iban() {
-    return this.form.get('iban');
+    this.localStorageService.saveToLocalStorage(this.getAllFormData());
   }
 }

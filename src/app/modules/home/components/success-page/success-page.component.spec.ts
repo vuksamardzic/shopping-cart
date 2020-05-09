@@ -1,6 +1,6 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import {async, ComponentFixture, TestBed} from '@angular/core/testing';
 
-import { SuccessPageComponent } from './success-page.component';
+import {SuccessPageComponent} from './success-page.component';
 
 describe('SuccessPageComponent', () => {
   let component: SuccessPageComponent;
@@ -8,9 +8,9 @@ describe('SuccessPageComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ SuccessPageComponent ]
+      declarations: [SuccessPageComponent]
     })
-    .compileComponents();
+      .compileComponents();
   }));
 
   beforeEach(() => {

@@ -1,5 +1,5 @@
 import {Pipe, PipeTransform} from '@angular/core';
-import {SortOrderEnum} from "../enums/sort-order.enum";
+import {SortOrderEnum} from '../enums/sort-order.enum';
 
 @Pipe({
   name: 'sortArrow'

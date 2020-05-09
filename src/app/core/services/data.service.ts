@@ -1,15 +1,15 @@
 import {Injectable} from '@angular/core';
-import {BehaviorSubject} from "rxjs";
+import {BehaviorSubject} from 'rxjs';
 
 @Injectable()
 export class DataService {
-  private _cartItemsDataSource = new BehaviorSubject<any>([]);
-  cartItemsDataSource = this._cartItemsDataSource.asObservable();
+  private CART_ITEMS_DATA_SOURCE = new BehaviorSubject<any>([]);
+  cartItemsDataSource = this.CART_ITEMS_DATA_SOURCE.asObservable();
 
   constructor() {
   }
 
   changeCartItemsDataSource(data: any[]) {
-    this._cartItemsDataSource.next(data);
+    this.CART_ITEMS_DATA_SOURCE.next(data);
   }
 }

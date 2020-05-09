@@ -1,11 +1,11 @@
 import {Injectable} from '@angular/core';
-import {HttpClient} from "@angular/common/http";
-import {ConfigService} from "./config.service";
-import {Observable} from "rxjs";
-import {map} from "rxjs/operators";
-import {Product} from "../interfaces/product.interface";
-import {BasicResponse} from "../interfaces/basic-response.interface";
-import {SortOrderEnum} from "../enums/sort-order.enum";
+import {HttpClient} from '@angular/common/http';
+import {ConfigService} from './config.service';
+import {Observable} from 'rxjs';
+import {map} from 'rxjs/operators';
+import {Product} from '../interfaces/product.interface';
+import {BasicResponse} from '../interfaces/basic-response.interface';
+import {SortOrderEnum} from '../enums/sort-order.enum';
 
 @Injectable()
 export class ProductService {
@@ -19,7 +19,7 @@ export class ProductService {
   }
 
   searchByProductName(text: string, products: Product[]): Product[] {
-    let filteredProducts = products.filter(product => {
+    const filteredProducts = products.filter(product => {
       const term = text.toLowerCase();
       return product.productName.toLowerCase().includes(term);
     });

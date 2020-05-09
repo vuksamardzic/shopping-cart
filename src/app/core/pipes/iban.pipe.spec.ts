@@ -1,4 +1,4 @@
-import { IbanPipe } from './iban.pipe';
+import {IbanPipe} from './iban.pipe';
 
 describe('IbanPipe', () => {
   it('create an instance', () => {

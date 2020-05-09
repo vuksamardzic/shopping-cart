@@ -1,4 +1,4 @@
-import { SortArrowPipe } from './sort-arrow.pipe';
+import {SortArrowPipe} from './sort-arrow.pipe';
 
 describe('SortArrowPipe', () => {
   it('create an instance', () => {
