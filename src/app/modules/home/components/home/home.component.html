@@ -2,7 +2,7 @@
   <div class="container d-flex flex-column flex-md-row justify-content-between align-items-center">
     <a class="py-2">
       Easy Cart
-      <img src="../assets/images/logo.png" class="img-fluid sc-logo" alt="logo">
+      <img src="../../../../../assets/images/logo.png" class="img-fluid sc-logo" alt="logo">
     </a>
     <a class="py-2 d-md-inline-block cursor-pointer"
        (click)="openCartModal(content)">
@@ -51,7 +51,7 @@
         </button>
       </td>
     </tr>
-    <tr *ngIf="true">
+    <tr *ngIf="loader">
       <td colspan="5">
         Init data loading
         <div class="ml-2 spinner-border spinner-border-sm" role="status">
