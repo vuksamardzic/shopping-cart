@@ -1,5 +1,9 @@
 # ShoppingCart
 
+Basic shopping cart app, you can add items to cart and adjust them inside cart modal, every step of cart is kept in local storage until purchase is complete.
+
+[View live](https://vs-shopping-cart.surge.sh/)
+
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 9.1.0.
 
 ## Development server
